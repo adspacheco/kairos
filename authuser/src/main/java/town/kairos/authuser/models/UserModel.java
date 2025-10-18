@@ -8,7 +8,6 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import town.kairos.authuser.enums.DocumentType;
 import town.kairos.authuser.enums.UserStatus;
 import town.kairos.authuser.enums.UserType;
 
@@ -53,10 +52,6 @@ public class UserModel implements Serializable {
 
     @Column(length = 20)
     private String phoneNumber;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private DocumentType documentType;
 
     @Column(length = 20)
     private String documentId;
