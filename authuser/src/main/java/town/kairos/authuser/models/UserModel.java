@@ -8,6 +8,7 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.hateoas.RepresentationModel;
 import town.kairos.authuser.enums.UserStatus;
 import town.kairos.authuser.enums.UserType;
 
@@ -21,7 +22,7 @@ import java.util.UUID;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "TB_USERS")
-public class UserModel implements Serializable {
+public class UserModel extends RepresentationModel<UserModel> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

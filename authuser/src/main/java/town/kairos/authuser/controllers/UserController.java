@@ -15,6 +15,9 @@ import town.kairos.authuser.models.UserModel;
 import town.kairos.authuser.services.UserService;
 import town.kairos.authuser.specifications.SpecificationTemplate;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
@@ -34,6 +37,12 @@ public class UserController  {
             Pageable pageable) {
 
         Page<UserModel> userModelPage = userService.findAll(spec, pageable);
+
+        if (!userModelPage.isEmpty()) {
+            for(UserModel user : userModelPage.toList()) {
+                user.add(linkTo(methodOn(UserController.class).getOneUser(user.getUserId())).withSelfRel());
+            }
+        }
         return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
     }
 
