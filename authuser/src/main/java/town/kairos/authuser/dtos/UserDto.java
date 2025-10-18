@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import town.kairos.authuser.validation.UsernameConstraint;
 
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ public class UserDto {
 
     @NotBlank(groups = UserView.RegistrationPost.class)
     @Size(min = 4, max = 50, groups = UserView.RegistrationPost.class)
+    @UsernameConstraint(groups = UserView.RegistrationPost.class)
     @JsonView(UserView.RegistrationPost.class)
     private String username;
 
