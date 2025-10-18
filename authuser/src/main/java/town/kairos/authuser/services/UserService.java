@@ -1,7 +1,10 @@
 package town.kairos.authuser.services;
 
+import org.springframework.data.jpa.domain.Specification;
 import town.kairos.authuser.models.UserModel;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,4 +21,6 @@ public interface UserService {
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
+
+    Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable);
 }
