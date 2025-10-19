@@ -1,10 +1,10 @@
-package town.kairos.marketdata;
+package town.kairos.market;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MarketdataApplicationTests {
+class MarketApplicationTests {
 
     @Test
     void contextLoads() {
