@@ -1,4 +1,4 @@
-package town.kairos.authuser;
+package town.kairos.authuser.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

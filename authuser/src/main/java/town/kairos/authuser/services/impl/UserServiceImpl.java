@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import town.kairos.authuser.UserRepository;
+import town.kairos.authuser.repositories.UserRepository;
 import town.kairos.authuser.models.UserModel;
 import town.kairos.authuser.services.UserService;
 
