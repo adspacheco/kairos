@@ -1,9 +1,9 @@
-package models;
+package town.kairos.market.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import enums.MarketStatus;
-import enums.MarketType;
+import town.kairos.market.enums.MarketStatus;
+import town.kairos.market.enums.MarketType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;

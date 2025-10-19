@@ -1,7 +1,7 @@
-package repositories;
+package town.kairos.market.repositories;
 
-import models.MarketModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import town.kairos.market.models.MarketModel;
 
 import java.util.UUID;
 
