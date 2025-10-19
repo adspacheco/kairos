@@ -1,6 +1,7 @@
 package town.kairos.market.specifications;
 
 import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import town.kairos.market.models.ActionModel;
 import town.kairos.market.models.ContextModel;
 import town.kairos.market.models.MarketModel;
+import town.kairos.market.models.MarketUserModel;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -48,6 +50,14 @@ public class SpecificationTemplate {
             Root<ContextModel> context = query.from(ContextModel.class);
             Expression<Collection<ActionModel>> contextActions = context.get("actions");
             return cb.and(cb.equal(context.get("contextId"), contextId), cb.isMember(action, contextActions));
+        };
+    }
+
+    public static Specification<MarketModel> marketUserId(final UUID userId) {
+        return (root, query, cb) -> {
+            query.distinct(true);
+            Join<MarketModel, MarketUserModel> marketProd = root.join("marketsUsers");
+            return cb.equal(marketProd.get("userId"), userId);
         };
     }
 }
