@@ -2,17 +2,18 @@ package town.kairos.market.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import town.kairos.market.models.MarketModel;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public interface MarketService {
-    void save(MarketModel marketModel);
-
-    Optional<MarketModel> findById(UUID marketId);
+    MarketModel save(MarketModel marketModel);
 
     void delete(MarketModel marketModel);
 
-    Page<MarketModel> findAll(Pageable pageable);
+    Optional<MarketModel> findById(UUID marketId);
+
+    Page<MarketModel> findAll(Specification<MarketModel> spec, Pageable pageable);
 }

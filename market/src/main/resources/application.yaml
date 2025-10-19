@@ -20,3 +20,13 @@ spring:
 
     show-sql: true
     open-in-view: false
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  level:
+    town.kairos: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO

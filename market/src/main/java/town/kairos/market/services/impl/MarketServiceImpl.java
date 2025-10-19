@@ -3,6 +3,7 @@ package town.kairos.market.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import town.kairos.market.models.MarketModel;
 import town.kairos.market.repositories.MarketRepository;
@@ -18,13 +19,8 @@ public class MarketServiceImpl implements MarketService {
     private MarketRepository marketRepository;
 
     @Override
-    public void save(MarketModel marketModel) {
-        marketRepository.save(marketModel);
-    }
-
-    @Override
-    public Optional<MarketModel> findById(UUID marketId) {
-        return marketRepository.findById(marketId);
+    public MarketModel save(MarketModel marketModel) {
+        return marketRepository.save(marketModel);
     }
 
     @Override
@@ -33,7 +29,12 @@ public class MarketServiceImpl implements MarketService {
     }
 
     @Override
-    public Page<MarketModel> findAll(Pageable pageable) {
-        return marketRepository.findAll(pageable);
+    public Optional<MarketModel> findById(UUID marketId) {
+        return marketRepository.findById(marketId);
+    }
+
+    @Override
+    public Page<MarketModel> findAll(Specification<MarketModel> spec, Pageable pageable) {
+        return marketRepository.findAll(spec, pageable);
     }
 }

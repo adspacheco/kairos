@@ -1,10 +1,7 @@
 package town.kairos.market.controllers;
 
-import town.kairos.market.dtos.MarketDto;
-import town.kairos.market.enums.MarketStatus;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,8 +11,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import town.kairos.market.dtos.MarketDto;
+import town.kairos.market.enums.MarketStatus;
 import town.kairos.market.models.MarketModel;
 import town.kairos.market.services.MarketService;
+import town.kairos.market.specifications.SpecificationTemplate;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -41,64 +41,51 @@ public class MarketController {
         marketModel.setMarketStatus(MarketStatus.ACTIVE);
 
         marketService.save(marketModel);
-
-        log.debug("POST saveMarket marketId saved: {}", marketModel.getMarketId());
-        log.info("Market created successfully with ID {}", marketModel.getMarketId());
+        log.info("Market created successfully ID {}", marketModel.getMarketId());
         return ResponseEntity.status(HttpStatus.CREATED).body(marketModel);
     }
 
-    @DeleteMapping("/{marketId}")
-    public ResponseEntity<Object> deleteMarket(@PathVariable(value = "marketId") UUID marketId) {
-        log.debug("DELETE deleteMarket received ID: {}", marketId);
-        Optional<MarketModel> marketModelOptional = marketService.findById(marketId);
-        if (!marketModelOptional.isPresent()) {
+    @PutMapping("/{marketId}")
+    public ResponseEntity<Object> updateMarket(@PathVariable UUID marketId,
+                                               @RequestBody @Valid MarketDto marketDto) {
+        Optional<MarketModel> opt = marketService.findById(marketId);
+        if (opt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Market not found.");
         }
+        var market = opt.get();
+        BeanUtils.copyProperties(marketDto, market);
+        market.setLastUpdatedDate(LocalDateTime.now(ZoneId.of("UTC")));
+        marketService.save(market);
 
-        marketService.delete(marketModelOptional.get());
-        log.debug("DELETE deleteMarket deleted ID: {}", marketId);
-        log.info("Market deleted successfully ID {}", marketId);
-        return ResponseEntity.status(HttpStatus.OK).body("Market deleted successfully.");
+        log.info("Market updated successfully ID {}", marketId);
+        return ResponseEntity.ok(market);
     }
 
-    @PutMapping("/{marketId}")
-    public ResponseEntity<Object> updateMarket(@PathVariable(value = "marketId") UUID marketId,
-                                               @RequestBody @Valid MarketDto marketDto) {
-        log.debug("PUT updateMarket received: {}", marketDto.toString());
-        Optional<MarketModel> marketModelOptional = marketService.findById(marketId);
-        if (!marketModelOptional.isPresent()) {
+    @DeleteMapping("/{marketId}")
+    public ResponseEntity<Object> deleteMarket(@PathVariable UUID marketId) {
+        Optional<MarketModel> opt = marketService.findById(marketId);
+        if (opt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Market not found.");
         }
-
-        var marketModel = marketModelOptional.get();
-        marketModel.setTitle(marketDto.getTitle());
-        marketModel.setDescription(marketDto.getDescription());
-        marketModel.setCategory(marketDto.getCategory());
-        marketModel.setLocation(marketDto.getLocation());
-        marketModel.setMarketType(marketDto.getMarketType());
-        marketModel.setLastUpdatedDate(LocalDateTime.now(ZoneId.of("UTC")));
-
-        marketService.save(marketModel);
-
-        log.debug("PUT updateMarket marketId saved: {}", marketModel.getMarketId());
-        log.info("Market updated successfully ID {}", marketModel.getMarketId());
-        return ResponseEntity.status(HttpStatus.OK).body(marketModel);
+        marketService.delete(opt.get());
+        return ResponseEntity.ok("Market deleted successfully.");
     }
 
     @GetMapping
     public ResponseEntity<Page<MarketModel>> getAllMarkets(
+            SpecificationTemplate.MarketSpec spec,
             @PageableDefault(page = 0, size = 10, sort = "marketId", direction = Sort.Direction.ASC) Pageable pageable) {
-        log.debug("GET getAllMarkets called");
-        return ResponseEntity.status(HttpStatus.OK).body(marketService.findAll(pageable));
+
+        Page<MarketModel> markets = marketService.findAll(spec, pageable);
+        return ResponseEntity.ok(markets);
     }
 
     @GetMapping("/{marketId}")
-    public ResponseEntity<Object> getOneMarket(@PathVariable(value = "marketId") UUID marketId) {
-        log.debug("GET getOneMarket called with ID {}", marketId);
-        Optional<MarketModel> marketModelOptional = marketService.findById(marketId);
-        if (!marketModelOptional.isPresent()) {
+    public ResponseEntity<Object> getOneMarket(@PathVariable UUID marketId) {
+        Optional<MarketModel> opt = marketService.findById(marketId);
+        if (opt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Market not found.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(marketModelOptional.get());
+        return ResponseEntity.ok(opt.get());
     }
 }

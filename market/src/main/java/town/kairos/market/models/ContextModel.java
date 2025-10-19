@@ -3,12 +3,9 @@ package town.kairos.market.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import town.kairos.market.enums.MarketStatus;
-import town.kairos.market.enums.MarketType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
@@ -21,14 +18,14 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "TB_MARKETS")
-public class MarketModel implements Serializable {
+@Table(name = "TB_CONTEXTS")
+public class ContextModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID marketId;
+    private UUID contextId;
 
     @Column(nullable = false, length = 150)
     private String title;
@@ -36,33 +33,17 @@ public class MarketModel implements Serializable {
     @Column(nullable = false, length = 500)
     private String description;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private MarketType marketType;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private MarketStatus marketStatus;
-
-    @Column(length = 100)
-    private String category;
-
-    @Column(length = 100)
-    private String location;
-
-    @Column
-    private String imageUrl;
-
     @CreatedDate
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @Column(nullable = false)
     private LocalDateTime creationDate;
 
-    @LastModifiedDate
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private LocalDateTime lastUpdatedDate;
-
-    @OneToMany(mappedBy = "market", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Set<ContextModel> contexts;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private MarketModel market;
+
+    @OneToMany(mappedBy = "context", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Set<ActionModel> actions;
 
 }
