@@ -75,12 +75,15 @@ public class MarketController {
 
     @DeleteMapping("/{marketId}")
     public ResponseEntity<Object> deleteMarket(@PathVariable UUID marketId) {
+        log.debug("DELETE deleteMarket marketId received: {}", marketId);
         Optional<MarketModel> opt = marketService.findById(marketId);
         if (opt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Market not found.");
         }
         marketService.delete(opt.get());
-        return ResponseEntity.ok("Market deleted successfully.");
+        log.debug("DELETE deleteMarket marketId deleted {}", marketId);
+        log.info("Market deleted successfully marketId {}", marketId);
+        return ResponseEntity.status(HttpStatus.OK).body("Market deleted successfully.");
     }
 
     @GetMapping

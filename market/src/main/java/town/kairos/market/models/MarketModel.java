@@ -3,6 +3,8 @@ package town.kairos.market.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import town.kairos.market.enums.MarketStatus;
 import town.kairos.market.enums.MarketType;
 import jakarta.persistence.*;
@@ -61,12 +63,13 @@ public class MarketModel implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime lastUpdatedDate;
 
-    @OneToMany(mappedBy = "market", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "market", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<ContextModel> contexts;
 
-    @OneToMany(mappedBy = "market", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "market", fetch = FetchType.LAZY)
     private Set<MarketUserModel> marketsUsers;
 
     public MarketUserModel convertToMarketUserModel(UUID userID) {
