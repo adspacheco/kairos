@@ -73,4 +73,8 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<UserMarketModel> usersMarkets;
+
+    public UserMarketModel convertToUserCourseModel(UUID marketId){
+        return new UserMarketModel(null, this, marketId);
+    }
 }

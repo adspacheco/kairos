@@ -2,6 +2,7 @@ package town.kairos.authuser.clients;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ import java.util.UUID;
 
 @Log4j2
 @Component
-public class UserClient {
+public class MarketClient {
 
     @Autowired
     RestTemplate restTemplate;
@@ -27,11 +28,14 @@ public class UserClient {
     @Autowired
     UtilsService utilsService;
 
+    @Value("${kairos.api.url.market}")
+    String REQUEST_URL_MARKET;
+
     public Page<MarketDto> getAllMarketsByUser(UUID userId, Pageable pageable) {
         List<MarketDto> searchResult = null;
         ResponseEntity<ResponsePageDto<MarketDto>> result = null;
 
-        String url = utilsService.createUrl(userId, pageable);
+        String url = REQUEST_URL_MARKET + utilsService.createUrlGetAllMarketsByUser(userId, pageable);
 
         log.debug("Request URL: {}", url);
         log.info("Request URL: {}", url);

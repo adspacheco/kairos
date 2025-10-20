@@ -30,3 +30,8 @@ logging:
     root: INFO
     org.springframework.web: DEBUG
     org.hibernate: INFO
+
+kairos:
+  api:
+    url:
+      market: 'http://localhost:8088'

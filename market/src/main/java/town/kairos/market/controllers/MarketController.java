@@ -48,11 +48,11 @@ public class MarketController {
     @PutMapping("/{marketId}")
     public ResponseEntity<Object> updateMarket(@PathVariable UUID marketId,
                                                @RequestBody @Valid MarketDto marketDto) {
-        Optional<MarketModel> opt = marketService.findById(marketId);
-        if (opt.isEmpty()) {
+        Optional<MarketModel> marketModelOptional = marketService.findById(marketId);
+        if (marketModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Market not found.");
         }
-        var market = opt.get();
+        var market = marketModelOptional.get();
         BeanUtils.copyProperties(marketDto, market);
         market.setLastUpdatedDate(LocalDateTime.now(ZoneId.of("UTC")));
         marketService.save(market);
