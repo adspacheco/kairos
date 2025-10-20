@@ -2,6 +2,8 @@ server:
   port: 8088
 
 spring:
+  application:
+    name: kairos-market-service
   datasource:
     url: jdbc:postgresql://localhost:5440/kairos_market
     username: local_user
@@ -34,4 +36,11 @@ logging:
 kairos:
   api:
     url:
-      authuser: "http://localhost:8087"
+      authuser: 'http://kairos-authuser-service'
+
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://localhost:8761/eureka'
+  instance:
+    hostname: localhost
