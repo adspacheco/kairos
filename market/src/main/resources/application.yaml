@@ -1,5 +1,7 @@
 server:
   port: 8088
+  servlet:
+    context-path: '/kairos-market/'
 
 spring:
   application:
@@ -36,7 +38,7 @@ logging:
 kairos:
   api:
     url:
-      authuser: 'http://kairos-authuser-service'
+      authuser: 'http://kairos-authuser-service/kairos-authuser'
 
 eureka:
   client:

@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: kairos-api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: authuser-service
+              uri: lb://KAIROS-AUTHUSER-SERVICE
+              predicates:
+                - Path=/kairos-authuser/**
+            - id: market-service
+              uri: lb://KAIROS-MARKET-SERVICE
+              predicates:
+                - Path=/kairos-market/**
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://localhost:8761/eureka'
+  instance:
+    hostname: localhost
