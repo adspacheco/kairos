@@ -10,12 +10,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import town.kairos.market.dtos.MarketDto;
 import town.kairos.market.enums.MarketStatus;
 import town.kairos.market.models.MarketModel;
 import town.kairos.market.services.MarketService;
 import town.kairos.market.specifications.SpecificationTemplate;
+import town.kairos.market.validation.MarketValidator;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -31,9 +33,19 @@ public class MarketController {
     @Autowired
     private MarketService marketService;
 
+    @Autowired
+    MarketValidator marketValidator;
+
     @PostMapping
-    public ResponseEntity<Object> saveMarket(@RequestBody @Valid MarketDto marketDto) {
+    public ResponseEntity<Object> saveMarket(@RequestBody MarketDto marketDto, Errors errors) {
         log.debug("POST saveMarket received: {}", marketDto.toString());
+
+        marketValidator.validate(marketDto, errors);
+
+        if (errors.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.getAllErrors());
+        }
+
         var marketModel = new MarketModel();
         BeanUtils.copyProperties(marketDto, marketModel);
         marketModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
