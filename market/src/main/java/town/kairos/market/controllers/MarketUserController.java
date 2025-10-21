@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import town.kairos.market.dtos.ParticipationDto;
 import town.kairos.market.models.MarketModel;
 import town.kairos.market.services.MarketService;
+import town.kairos.market.services.UserService;
+import town.kairos.market.specifications.SpecificationTemplate;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -24,16 +26,21 @@ public class MarketUserController {
     @Autowired
     MarketService marketService;
 
+    @Autowired
+    UserService userService;
+
     @GetMapping("/markets/{marketId}/users")
-    public ResponseEntity<Object> getAllUsersByMarket(@PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
-                                                             @PathVariable(value = "marketId") UUID marketId) {
+    public ResponseEntity<Object> getAllUsersByMarket(SpecificationTemplate.UserSpec spec,
+                                                      @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
+                                                      @PathVariable(value = "marketId") UUID marketId) {
 
         Optional<MarketModel> marketModelOptional = marketService.findById(marketId);
         if (marketModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Market not found.");
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body("to impl");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.findAll(SpecificationTemplate.userMarketId(marketId).and(spec), pageable));
     }
 
     @PostMapping("/markets/{marketId}/users/participation")

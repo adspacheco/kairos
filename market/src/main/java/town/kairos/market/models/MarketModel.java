@@ -68,4 +68,13 @@ public class MarketModel implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     private Set<ContextModel> contexts;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "TB_MARKETS_USERS",
+            joinColumns = @JoinColumn(name = "market_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<UserModel> users;
+
 }
