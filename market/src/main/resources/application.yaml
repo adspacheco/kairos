@@ -42,6 +42,12 @@ kairos:
   api:
     url:
       authuser: 'http://kairos-authuser-service/kairos-authuser'
+  broker:
+    exchange:
+      userEventExchange: kairos.userevent
+    queue:
+      userEventQueue:
+        name: kairos.userevent.ms.market
 
 eureka:
   client:

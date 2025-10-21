@@ -15,12 +15,15 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserRepository marketUserRepository;
-    @Autowired
     private UserRepository userRepository;
 
     @Override
     public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
         return userRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public UserModel save(UserModel userModel) {
+        return userRepository.save(userModel);
     }
 }
