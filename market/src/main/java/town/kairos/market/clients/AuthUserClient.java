@@ -69,4 +69,9 @@ public class AuthUserClient {
 
         restTemplate.postForObject(url, marketUserDto, String.class);
     }
+
+    public void deleteMarketInAuthUser(UUID marketId) {
+        String url = REQUEST_URL_AUTHUSER + "/users/markets/" + marketId;
+        restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
+    }
 }

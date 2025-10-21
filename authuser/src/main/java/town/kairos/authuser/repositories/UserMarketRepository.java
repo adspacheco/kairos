@@ -14,4 +14,8 @@ public interface UserMarketRepository extends JpaRepository<UserMarketModel, UUI
 
     @Query(value="select * from tb_users_markets where user_user_id = :userId", nativeQuery = true)
     List<UserMarketModel> findAllUserMarketIntoUser(@Param("userId") UUID userId);
+
+    boolean existsByMarketId(UUID marketId);
+
+    void deleteAllByMarketId(UUID marketId);
 }

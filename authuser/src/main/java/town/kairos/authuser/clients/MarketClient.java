@@ -52,4 +52,9 @@ public class MarketClient {
 
         return result.getBody();
     }
+
+    public void deleteUserInMarket(UUID userId) {
+        String url = REQUEST_URL_MARKET + "/markets/users/" + userId;
+        restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
+    }
 }

@@ -11,4 +11,8 @@ public interface MarketUserService {
     MarketUserModel save(MarketUserModel marketUserModel);
 
     MarketUserModel saveAndSendParticipationUserInMarket(MarketUserModel marketUserModel);
+
+    boolean existsByUserId(UUID userId);
+
+    void deleteMarketUserByUser(UUID userId);
 }

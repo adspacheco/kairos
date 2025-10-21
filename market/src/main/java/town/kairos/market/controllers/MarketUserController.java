@@ -3,7 +3,6 @@ package town.kairos.market.controllers;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -38,8 +37,14 @@ public class MarketUserController {
     MarketUserService marketUserService;
 
     @GetMapping("/markets/{marketId}/users")
-    public ResponseEntity<Page<UserDto>> getAllUsersByMarket(@PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
+    public ResponseEntity<Object> getAllUsersByMarket(@PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
                                                              @PathVariable(value = "marketId") UUID marketId) {
+
+        Optional<MarketModel> marketModelOptional = marketService.findById(marketId);
+        if (marketModelOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Market not found.");
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(authUserClient.getAllUsersByMarket(marketId, pageable));
     }
 
@@ -72,5 +77,15 @@ public class MarketUserController {
                 marketModelOptional.get().convertToMarketUserModel(participationDto.getUserId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(marketUserModel);
+    }
+
+    @DeleteMapping("/markets/users/{userId}")
+    public ResponseEntity<Object> deleteMarketUserByUser(@PathVariable(value = "userId") UUID userId) {
+        if(!marketUserService.existsByUserId(userId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("MarketUser not found!");
+        }
+
+        marketUserService.deleteMarketUserByUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body("MarketUser deleted successfully!");
     }
 }

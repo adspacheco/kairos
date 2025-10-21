@@ -59,4 +59,14 @@ public class UserMarketController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userMarketModel);
     }
+
+    @DeleteMapping("/users/markets/{marketId}")
+    public ResponseEntity<Object> deleteUserMarketByMarket(@PathVariable(value = "marketId") UUID marketId) {
+        if(!userMarketService.existsByMarketId(marketId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("UserMarket not found!");
+        }
+
+        userMarketService.deleteUserMarketByMarket(marketId);
+        return ResponseEntity.status(HttpStatus.OK).body("UserMarket deleted successfully!");
+    }
 }

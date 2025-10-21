@@ -41,4 +41,15 @@ public class MarketUserServiceImpl implements MarketUserService {
 
         return marketUserModel;
     }
+
+    @Override
+    public boolean existsByUserId(UUID userId) {
+        return marketUserRepository.existsByUserId(userId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteMarketUserByUser(UUID userId) {
+        marketUserRepository.deleteAllByUserId(userId);
+    }
 }

@@ -9,4 +9,9 @@ public interface UserMarketService {
     boolean existsByUserAndMarketId(UserModel userModel, UUID marketId);
 
     UserMarketModel save(UserMarketModel userMarketModel);
+
+
+    boolean existsByMarketId(UUID marketId);
+
+    void deleteUserMarketByMarket(UUID marketId);
 }
