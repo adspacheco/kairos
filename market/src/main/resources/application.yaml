@@ -7,7 +7,7 @@ spring:
   application:
     name: kairos-market-service
   datasource:
-    url: jdbc:postgresql://localhost:5440/kairos_market
+    url: jdbc:postgresql://localhost:5441/kairos_market
     username: local_user
     password: local_password
     driver-class-name: org.postgresql.Driver

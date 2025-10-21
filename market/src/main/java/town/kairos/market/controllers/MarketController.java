@@ -92,11 +92,7 @@ public class MarketController {
             @PageableDefault(page = 0, size = 10, sort = "marketId", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(required = false) UUID userId) {
 
-        if (userId != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(marketService.findAll(SpecificationTemplate.marketUserId(userId).and(spec), pageable));
-        } else {
             return ResponseEntity.status(HttpStatus.OK).body(marketService.findAll(spec, pageable));
-        }
     }
 
     @GetMapping("/{marketId}")

@@ -8,5 +8,16 @@ services:
     ports:
       - "5440:5432"
     volumes:
-      - ./init:/docker-entrypoint-initdb.d	
+      - ./init:/docker-entrypoint-initdb.d
+    command: ["postgres", "-c", "max_connections=901"]
+  database_v2:
+    container_name: "postgres-kairos-v2"
+    image: "postgres:16.0-alpine3.18"
+    environment:
+      POSTGRES_USER: "local_user"
+      POSTGRES_PASSWORD: "local_password"
+    ports:
+      - "5441:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
     command: ["postgres", "-c", "max_connections=901"]

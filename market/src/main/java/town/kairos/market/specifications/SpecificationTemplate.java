@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import town.kairos.market.models.ActionModel;
 import town.kairos.market.models.ContextModel;
 import town.kairos.market.models.MarketModel;
-import town.kairos.market.models.MarketUserModel;
+import town.kairos.market.models.UserModel;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -53,11 +53,4 @@ public class SpecificationTemplate {
         };
     }
 
-    public static Specification<MarketModel> marketUserId(final UUID userId) {
-        return (root, query, cb) -> {
-            query.distinct(true);
-            Join<MarketModel, MarketUserModel> marketProd = root.join("marketsUsers");
-            return cb.equal(marketProd.get("userId"), userId);
-        };
-    }
 }

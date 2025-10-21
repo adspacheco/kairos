@@ -68,11 +68,4 @@ public class MarketModel implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     private Set<ContextModel> contexts;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "market", fetch = FetchType.LAZY)
-    private Set<MarketUserModel> marketsUsers;
-
-    public MarketUserModel convertToMarketUserModel(UUID userID) {
-        return new MarketUserModel(null, this, userID);
-    }
 }

@@ -7,8 +7,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import town.kairos.authuser.clients.MarketClient;
-import town.kairos.authuser.models.UserMarketModel;
-import town.kairos.authuser.repositories.UserMarketRepository;
 import town.kairos.authuser.repositories.UserRepository;
 import town.kairos.authuser.models.UserModel;
 import town.kairos.authuser.services.UserService;
@@ -23,9 +21,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    UserMarketRepository userMarketRepository;
 
     @Autowired
     private MarketClient marketClient;
@@ -43,20 +38,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void delete(UserModel userModel) {
-        boolean deleteUserMarketInMarket = false;
-
-        List<UserMarketModel> userMarketModelList = userMarketRepository.findAllUserMarketIntoUser(userModel.getUserId());
-
-        if(!userMarketModelList.isEmpty()){
-            userMarketRepository.deleteAll(userMarketModelList);
-            deleteUserMarketInMarket = true;
-        }
-
         userRepository.delete(userModel);
-
-        if (deleteUserMarketInMarket) {
-            marketClient.deleteUserInMarket(userModel.getUserId());
-        }
     }
 
     @Override
