@@ -35,7 +35,7 @@ public class CuratorController {
         var userModel = userModelOptional.get();
         userModel.setUserType(UserType.CURATOR);
         userModel.setLastUpdatedDate(LocalDateTime.now(ZoneId.of("UTC")));
-        userService.save(userModel);
+        userService.updateUser(userModel);
         return ResponseEntity.status(HttpStatus.OK).body(userModel);
     }
 }

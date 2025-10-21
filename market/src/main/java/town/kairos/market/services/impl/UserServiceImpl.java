@@ -26,4 +26,9 @@ public class UserServiceImpl implements UserService {
     public UserModel save(UserModel userModel) {
         return userRepository.save(userModel);
     }
+
+    @Override
+    public void delete(UUID userId) {
+        userRepository.deleteById(userId);
+    }
 }
