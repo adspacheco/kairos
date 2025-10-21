@@ -5,10 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.hateoas.RepresentationModel;
+import town.kairos.authuser.dtos.UserEventDto;
 import town.kairos.authuser.enums.UserStatus;
 import town.kairos.authuser.enums.UserType;
 
@@ -68,4 +70,11 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime lastUpdatedDate;
 
+    public UserEventDto convertToUserEventDto() {
+        var userEventDto = new UserEventDto();
+        BeanUtils.copyProperties(this, userEventDto);
+        userEventDto.setUserType(this.getUserType().toString());
+        userEventDto.setUserStatus(this.getUserStatus().toString());
+        return userEventDto;
+    }
 }

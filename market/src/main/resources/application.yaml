@@ -28,6 +28,9 @@ spring:
     ansi:
       enabled: always
 
+  rabbitmq:
+    addresses: amqp://local_user:local_password@localhost:5672/
+
 logging:
   level:
     town.kairos: TRACE

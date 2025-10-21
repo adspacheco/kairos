@@ -7,6 +7,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import town.kairos.authuser.clients.MarketClient;
+import town.kairos.authuser.enums.ActionType;
+import town.kairos.authuser.publishers.UserEventPublisher;
 import town.kairos.authuser.repositories.UserRepository;
 import town.kairos.authuser.models.UserModel;
 import town.kairos.authuser.services.UserService;
@@ -25,6 +27,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MarketClient marketClient;
 
+    @Autowired
+    UserEventPublisher userEventPublisher;
+
     @Override
     public List<UserModel> findAll() {
         return userRepository.findAll();
@@ -42,8 +47,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserModel userModel) {
-        userRepository.save(userModel);
+    public UserModel save(UserModel userModel) {
+       return userRepository.save(userModel);
     }
 
     @Override
@@ -59,6 +64,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
         return userRepository.findAll(spec, pageable);
+    }
+
+    @Transactional
+    @Override
+    public UserModel saveUser(UserModel userModel) {
+        userModel = save(userModel);
+        userEventPublisher.publishUserEvent(userModel.convertToUserEventDto(), ActionType.CREATE);
+        return userModel;
     }
 
 }
