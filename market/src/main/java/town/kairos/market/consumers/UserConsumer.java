@@ -1,7 +1,5 @@
 package town.kairos.market.consumers;
 
-import com.netflix.discovery.converters.Auto;
-import org.apache.catalina.User;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;

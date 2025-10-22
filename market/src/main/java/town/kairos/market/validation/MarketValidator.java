@@ -6,7 +6,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import town.kairos.market.dtos.MarketDto;
+import town.kairos.market.enums.UserType;
+import town.kairos.market.models.UserModel;
+import town.kairos.market.services.UserService;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -16,6 +20,8 @@ public class MarketValidator implements Validator {
     @Qualifier("defaultValidator")
     private Validator validator;
 
+    @Autowired
+    UserService userService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -33,18 +39,16 @@ public class MarketValidator implements Validator {
     }
 
     private void validateUserCurator(UUID userCurator, Errors errors) {
-//        ResponseEntity<UserDto> responseUserCurator;
-//        try {
-//            responseUserCurator = authUserClient.getOneUserById(userCurator);
-//
-//            if (responseUserCurator.getBody().getUserType().equals(UserType.INDIVIDUAL)) {
-//                errors.rejectValue("userCurator", "UserCuratorError", "User must be CURATOR or ADMIN.");
-//            }
-//        } catch (HttpStatusCodeException e) {
-//            if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-//                errors.rejectValue("userCurator", "UserCuratorError", "Curator not found.");
-//            }
-//        }
+        Optional<UserModel> userModelOptional = userService.findById(userCurator);
+
+        if (!userModelOptional.isPresent()) {
+            errors.rejectValue("userCurator", "UserCuratorError", "Curator not found.");
+        }
+
+        if (userModelOptional.get().getUserType().equals(UserType.INDIVIDUAL.toString())) {
+            errors.rejectValue("userCurator", "UserCuratorError", "User must be CURATOR or ADMIN.");
+        }
+
     }
 
 }

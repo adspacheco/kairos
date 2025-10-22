@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import town.kairos.market.dtos.ParticipationDto;
+import town.kairos.market.enums.UserStatus;
 import town.kairos.market.models.MarketModel;
+import town.kairos.market.models.UserModel;
 import town.kairos.market.services.MarketService;
 import town.kairos.market.services.UserService;
 import town.kairos.market.specifications.SpecificationTemplate;
@@ -53,8 +55,23 @@ public class MarketUserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Market not found.");
         }
 
-        // state transfer verifications
-        return ResponseEntity.status(HttpStatus.CREATED).body("to impl");
+        if(marketService.existsByMarketAndUser(marketId, participationDto.getUserId())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: participation already exists!");
+        }
+
+        Optional<UserModel> userModelOptional = userService.findById(participationDto.getUserId());
+        if(!userModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+
+        if(userModelOptional.get().getUserStatus().equals(UserStatus.BLOCKED.toString())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User is blocked.");
+        }
+
+        marketService.saveSubscriptionUserInMarket(marketModelOptional.get().getMarketId(),
+                                                    userModelOptional.get().getUserId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Participation successful.");
     }
 
 }

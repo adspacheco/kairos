@@ -61,4 +61,15 @@ public class MarketServiceImpl implements MarketService {
     public Page<MarketModel> findAll(Specification<MarketModel> spec, Pageable pageable) {
         return marketRepository.findAll(spec, pageable);
     }
+
+    @Override
+    public boolean existsByMarketAndUser(UUID marketId, UUID userId) {
+        return marketRepository.existsByMarketAndUser(marketId, userId);
+    }
+
+    @Transactional
+    @Override
+    public void saveSubscriptionUserInMarket(UUID marketId, UUID userId) {
+        marketRepository.saveMarketUser(marketId, userId);
+    }
 }
