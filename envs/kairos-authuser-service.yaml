@@ -1,0 +1,64 @@
+server:
+  port: 8087
+  servlet:
+    context-path: "/kairos-authuser/"
+
+spring:
+  application:
+    name: kairos-authuser-service
+  datasource:
+    url: jdbc:postgresql://localhost:5441/kairos_authuser
+    username: local_user
+    password: local_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        jdbc:
+          lob.non_contextual_creation: true
+
+    show-sql: true
+    open-in-view: false
+  output:
+    ansi:
+      enabled: always
+
+  rabbitmq:
+    addresses: amqp://local_user:local_password@localhost:5672/
+
+logging:
+  level:
+    town.kairos: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+
+kairos:
+  api:
+    url:
+      market: "http://kairos-market-service/kairos-market"
+  broker:
+    exchange:
+      userEvent: kairos.userevent
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      circuitBreakerInstance:
+        sliding-window-size: 30
+        permitted-number-of-calls-in-half-open-state: 2
+        sliding-window-type: TIME_BASED
+        minimum-number-of-calls: 2
+        wait-duration-in-open-state: 30s
+        failure-rate-threshold: 80
+
+  retry:
+    instances:
+      retryInstance:
+        max-attempts: 3
+        wait-duration: 5s
