@@ -1,5 +1,6 @@
 package town.kairos.authuser.clients;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,8 @@ public class MarketClient {
     String REQUEST_URL_MARKET;
 
 
-    @Retry(name = "retryInstance", fallbackMethod = "retryFallback")
+    //@Retry(name = "retryInstance", fallbackMethod = "retryFallback")
+    @CircuitBreaker(name = "circuitBreakerInstance")
     public Page<MarketDto> getAllMarketsByUser(UUID userId, Pageable pageable) {
         List<MarketDto> searchResult = null;
         ResponseEntity<ResponsePageDto<MarketDto>> result = null;
@@ -44,6 +46,8 @@ public class MarketClient {
 
         log.debug("Request URL: {}", url);
         log.info("Request URL: {}", url);
+
+        System.out.println("--------------- START REQUEST --------------- ");
 
         try {
             ParameterizedTypeReference<ResponsePageDto<MarketDto>> responseType = new ParameterizedTypeReference<ResponsePageDto<MarketDto>>() {};
@@ -60,6 +64,12 @@ public class MarketClient {
 
     public Page<MarketDto> retryFallback(UUID userId, Pageable pageable, Throwable t) {
         log.error("Inside retry retryFallback, cause - {}", t.toString());
+        List<MarketDto> searchResult = new ArrayList<>();
+        return new PageImpl<>(searchResult, pageable, 0);
+    }
+
+    public Page<MarketDto> circuitBreakerFallback(UUID userId, Pageable pageable, Throwable t) {
+        log.error("Inside circuit breaker fallback, cause - {}", t.toString());
         List<MarketDto> searchResult = new ArrayList<>();
         return new PageImpl<>(searchResult, pageable, 0);
     }
