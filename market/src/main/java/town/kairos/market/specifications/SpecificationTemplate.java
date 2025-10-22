@@ -75,7 +75,7 @@ public class SpecificationTemplate {
     public static Specification<MarketModel> marketUserId(final UUID userId) {
         return (root, query, cb) -> {
             query.distinct(true);
-            Root<MarketModel> market = root;    
+            Root<MarketModel> market = root;
             Root<UserModel> user = query.from(UserModel.class);
             Expression<Collection<MarketModel>> usersMarkets = user.get("markets");
             return cb.and(cb.equal(user.get("userId"), userId), cb.isMember(market, usersMarkets));

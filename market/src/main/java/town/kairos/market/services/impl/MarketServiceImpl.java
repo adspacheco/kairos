@@ -49,6 +49,7 @@ public class MarketServiceImpl implements MarketService {
             }
             contextRepository.deleteAll(contextModelList);
         }
+        marketRepository.deleteMarketUserByUser(marketModel.getMarketId());
         marketRepository.delete(marketModel);
     }
 
