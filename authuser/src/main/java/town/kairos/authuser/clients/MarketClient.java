@@ -1,10 +1,12 @@
 package town.kairos.authuser.clients;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import town.kairos.authuser.dtos.MarketDto;
 import town.kairos.authuser.dtos.ResponsePageDto;
 import town.kairos.authuser.services.UtilsService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +34,8 @@ public class MarketClient {
     @Value("${kairos.api.url.market}")
     String REQUEST_URL_MARKET;
 
+
+    @Retry(name = "retryInstance", fallbackMethod = "retryFallback")
     public Page<MarketDto> getAllMarketsByUser(UUID userId, Pageable pageable) {
         List<MarketDto> searchResult = null;
         ResponseEntity<ResponsePageDto<MarketDto>> result = null;
@@ -51,6 +56,12 @@ public class MarketClient {
         log.info("Ending request /markets userId {}", userId);
 
         return result.getBody();
+    }
+
+    public Page<MarketDto> retryFallback(UUID userId, Pageable pageable, Throwable t) {
+        log.error("Inside retry retryFallback, cause - {}", t.toString());
+        List<MarketDto> searchResult = new ArrayList<>();
+        return new PageImpl<>(searchResult, pageable, 0);
     }
 
 }
