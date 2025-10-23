@@ -46,6 +46,18 @@ kairos:
     exchange:
       userEvent: kairos.userevent
 
+authuser:
+  refreshscope:
+    name: adspacheco
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - refresh
+
 resilience4j:
   circuitbreaker:
     instances:
