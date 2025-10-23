@@ -12,9 +12,14 @@ spring:
           search-paths: envs
           default-label: main
 
+kairos:
+  serviceRegistry:
+    username: serviceregistry
+    password: 'kairos123sr'
+
 eureka:
   client:
     service-url:
-      defaultZone: 'http://localhost:8761/eureka'
+      defaultZone: 'http://${kairos.serviceRegistry.username}:${kairos.serviceRegistry.password}@localhost:8761/eureka'
   instance:
     hostname: localhost
