@@ -7,3 +7,5 @@ spring:
     config:
       discovery:
         service-id: kairos-config-server
+      username: configserver
+      password: 'kairos123cs'

@@ -13,6 +13,9 @@ spring:
           default-label: main
 
 kairos:
+  configServer:
+    username: configserver
+    password: 'kairos123cs'
   serviceRegistry:
     username: serviceregistry
     password: 'kairos123sr'
