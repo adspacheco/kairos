@@ -1,57 +1,9 @@
-server:
-  port: 8088
-  servlet:
-    context-path: '/kairos-market/'
-
 spring:
   application:
     name: kairos-market-service
-  datasource:
-    url: jdbc:postgresql://localhost:5441/kairos_market
-    username: local_user
-    password: local_password
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        jdbc:
-          lob.non_contextual_creation: true
-
-    show-sql: true
-    open-in-view: false
-  output:
-    ansi:
-      enabled: always
-
-  rabbitmq:
-    addresses: amqp://local_user:local_password@localhost:5672/
-
-logging:
-  level:
-    town.kairos: TRACE
-    root: INFO
-    org.springframework.web: DEBUG
-    org.hibernate: INFO
-
-kairos:
-  api:
-    url:
-      authuser: 'http://kairos-authuser-service/kairos-authuser'
-  broker:
-    exchange:
-      userEventExchange: kairos.userevent
-    queue:
-      userEventQueue:
-        name: kairos.userevent.ms.market
-
-eureka:
-  client:
-    service-url:
-      defaultZone: 'http://localhost:8761/eureka'
-  instance:
-    hostname: localhost
+  config:
+    import: 'configserver:'
+  cloud:
+    config:
+      discovery:
+        service-id: kairos-config-server
