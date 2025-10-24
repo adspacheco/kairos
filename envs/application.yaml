@@ -2,6 +2,9 @@ kairos:
   serviceRegistry:
     username: serviceregistry
     password: "kairos123sr"
+  auth:
+    jwtSecret: aArdRixQqS1xAE6wFs45sFnhTos3WoJvOUNKhNcjR04XzqTKOxaEEr0mzrIXQBUOEY5UvIYpnM1jdcA1MNgQ3A==
+    jwtExpirationMs: 14400000
 
 eureka:
   client:
