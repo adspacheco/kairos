@@ -6,12 +6,16 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import town.kairos.authuser.dtos.UserDto;
+import town.kairos.authuser.enums.RoleType;
 import town.kairos.authuser.enums.UserStatus;
 import town.kairos.authuser.enums.UserType;
+import town.kairos.authuser.models.RoleModel;
 import town.kairos.authuser.models.UserModel;
+import town.kairos.authuser.services.RoleService;
 import town.kairos.authuser.services.UserService;
 
 import java.time.LocalDateTime;
@@ -26,6 +30,12 @@ public class AuthenticationController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RoleService roleService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
     public ResponseEntity<Object> registerUser(@RequestBody @Validated(UserDto.UserView.RegistrationPost.class)
@@ -42,6 +52,10 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is already taken!");
         }
 
+        RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Error: Role not found!"));
+
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         var userModel = new UserModel();
         BeanUtils.copyProperties(userDto, userModel);
 
@@ -49,6 +63,7 @@ public class AuthenticationController {
         userModel.setUserType(UserType.INDIVIDUAL);
         userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.setLastUpdatedDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userModel.getRoles().add(roleModel);
         userService.saveUser(userModel);
 
         log.debug("POST registerUser userId saved {}", userModel.getUserId());
